@@ -1,4 +1,4 @@
-package main.java.com.kasyno;
+package com.kasyno.gry;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
