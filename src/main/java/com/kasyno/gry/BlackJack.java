@@ -8,7 +8,10 @@ import javafx.scene.layout.StackPane;
 //komentarz
 
 
+//jeszcze jakies nowe kometarze
+
 //komentarz
+
 public class BlackJack extends Application {
 
     @Override
