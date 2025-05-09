@@ -1,10 +1,12 @@
-package main.java.com.kasyno;
+package com.kasyno.menu;
+
+import com.kasyno.gry.BlackJack;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class MainMenu extends Application {
 
