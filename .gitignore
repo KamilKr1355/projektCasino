@@ -1,0 +1,22 @@
+# Katalogi kompilacji
+/out/
+/bin/
+/target/
+
+# Pliki klas
+*.class
+
+# IDE i systemowe
+*.iml
+.idea/
+.vscode/
+.DS_Store
+
+# Maven
+log/
+*.log
+*.tmp
+
+# JavaFX
+*.jar
+*.exe
