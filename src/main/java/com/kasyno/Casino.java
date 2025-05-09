@@ -1,6 +1,4 @@
-package com.kasyno;
-
-import com.kasyno.menu.MainMenu;
+package main.java.com.kasyno;
 
 import javafx.application.Application;
 
