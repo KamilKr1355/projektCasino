@@ -5,7 +5,10 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+//komentarz
 
+
+//komentarz
 public class BlackJack extends Application {
 
     @Override
