@@ -5,6 +5,7 @@ package com.kasyno.menu;
 
 
 import com.kasyno.gry.BlackJackApp;
+import com.kasyno.gry.Ruletka;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -51,6 +52,16 @@ public class MainMenu extends Application {
                 ex.printStackTrace();
             }
 
+        });
+
+        ruletkaButton.setOnAction(e -> { 
+            try{
+            Ruletka ruletka = new Ruletka();
+            ruletka.start(primaryStage);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         // Układ VBox do przycisków
