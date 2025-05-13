@@ -4,7 +4,7 @@ package com.kasyno.menu;
 
 
 
-import com.kasyno.gry.BlackJack;
+import com.kasyno.gry.BlackJackApp;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -43,8 +43,14 @@ public class MainMenu extends Application {
 
         // Funkcja dla przycisku Blackjack
         blackjackButton.setOnAction(e -> {
-            BlackJack blackjackGame = new BlackJack();
-            blackjackGame.start(primaryStage);
+            try {
+                BlackJackApp blackjackApp = new BlackJackApp();
+                blackjackApp.start(new Stage()); // uruchom w nowym oknie
+                primaryStage.hide(); //ukryj menu
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         });
 
         // Układ VBox do przycisków
