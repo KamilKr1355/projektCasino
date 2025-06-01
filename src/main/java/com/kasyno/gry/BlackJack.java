@@ -1,7 +1,6 @@
 package com.kasyno.gry;
 
 import java.util.Scanner;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -29,6 +28,7 @@ public class BlackJack extends Application {
         Scene scene = new Scene(root, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
