@@ -10,13 +10,16 @@ public class Deck {
 
     public Deck() {
         cards = new ArrayList<>();
-        for (int i = 0; i < RANKS.length; i++) {
-            for (String suit : SUITS) {
-                cards.add(new Card(suit, RANKS[i], VALUES[i]));
+        for (int d = 0; d < 6; d++) { // 6 talii
+            for (int i = 0; i < RANKS.length; i++) {
+                for (String suit : SUITS) {
+                    cards.add(new Card(suit, RANKS[i], VALUES[i]));
+                }
             }
         }
         Collections.shuffle(cards);
     }
+
 
     public Card drawCard() {
         if (cards.isEmpty()) {
