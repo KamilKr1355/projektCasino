@@ -4,6 +4,7 @@ package com.kasyno.menu;
 
 
 
+import com.kasyno.database.UserDAO;
 import com.kasyno.gry.BlackJackApp;
 import com.kasyno.gry.Ruletka;
 
@@ -20,6 +21,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class MainMenu extends Application {
+    private static com.kasyno.player.Player player;
+
+    public static void setPlayer(com.kasyno.player.Player p) {
+        player = p;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -53,10 +59,9 @@ public class MainMenu extends Application {
             }
 
         });
-
         ruletkaButton.setOnAction(e -> { 
             try{
-            Ruletka ruletka = new Ruletka();
+            Ruletka ruletka = new Ruletka(player);
             ruletka.start(primaryStage);
             }
             catch (Exception ex) {
@@ -142,6 +147,21 @@ public class MainMenu extends Application {
         primaryStage.setScene(scene);
         primaryStage.centerOnScreen();
         primaryStage.show();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (player != null) {
+                UserDAO.updatePlayerBalance(player.getId(), player.getBalance());
+            }
+        }));
+    }
+    @Override
+    public void stop() {
+        if (player != null) {
+            System.out.println("Aktualizuję bilans: " + player.getBalance());
+            UserDAO.updatePlayerBalance(player.getId(), player.getBalance());
+        } else {
+            System.out.println("Brak gracza do aktualizacji bilansu.");
+        }
     }
 
     public static void main(String[] args) {
