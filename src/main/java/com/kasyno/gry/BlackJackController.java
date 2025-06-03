@@ -29,15 +29,38 @@ public class BlackJackController {
     @FXML
     private Button backButton;
 
+    @FXML
+    private Button newGameButton;
+
+    @FXML
+    private Label balanceLabel;
+
+    @FXML
+    private TextField betField;
+
+    @FXML
+    private Button betButton;
+
     private Deck deck;
     private Player player;
     private Player dealer;
+    private int playerBalance = 1000;
+    private int currentBet = 0;
+
 
 
     @FXML
     private void initialize() {
-        startNewGame();
+        hitButton.setDisable(true);
+        standButton.setDisable(true);
+        resultLabel.setText("Kliknij 'Nowa gra' aby rozpocząć.");
+//        startNewGame();
+        betButton.setDisable(false);
+        updateBalance();
+
     }
+
+
 
     @FXML
     private void onHit() {
@@ -48,6 +71,7 @@ public class BlackJackController {
             dealerPlay(); // krupier dobiera
             updateUI(true); // pokaz wszystko
             resultLabel.setText("Przegrałeś – bust!");
+            disableButtons();
         }
     }
 
@@ -56,6 +80,7 @@ public class BlackJackController {
     private void onStand() {
         dealerPlay();
         updateUI(true); // pokaz cala reke krupiera
+        disableButtons();
         resultLabel.setText(checkWinner());
     }
 
@@ -81,6 +106,10 @@ public class BlackJackController {
 
     @FXML
     private void startNewGame() {
+        betButton.setDisable(false);
+        betField.setDisable(false);
+        betField.clear();
+        currentBet = 0;
 
         resultLabel.setText("");
         hitButton.setDisable(false);
@@ -98,6 +127,9 @@ public class BlackJackController {
         updateUI(false); // false = nie pokazuj wszystkich kart krupiera
     }
 
+    private void updateBalance() {
+        balanceLabel.setText("Saldo: " + playerBalance);
+    }
 
 
     private void disableButtons() {
@@ -112,11 +144,22 @@ public class BlackJackController {
         int playerScore = player.getScore();
         int dealerScore = dealer.getScore();
 
-        if (playerScore > 21) return "Bust! Dealer wins.";
-        if (dealerScore > 21) return "Dealer busts! You win!";
-        if (playerScore > dealerScore) return "You win!";
-        if (dealerScore > playerScore) return "Dealer wins!";
-        return "Draw!";
+        if (playerScore > 21) {
+            return "Bust! Przegrałeś zakład " + currentBet + "!";
+        }
+        if (dealerScore > 21 || playerScore > dealerScore) {
+            int winAmount = currentBet * 2;
+            playerBalance += winAmount;
+            updateBalance();
+            return "Wygrałeś " + winAmount + "!";
+        }
+        if (dealerScore == playerScore) {
+            playerBalance += currentBet; // zwrot stawki
+            updateBalance();
+            return "Remis – zakład zwrócony.";
+        }
+
+        return "Przegrałeś zakład " + currentBet + "!";
     }
 
 
@@ -126,6 +169,33 @@ public class BlackJackController {
             dealerLabel.setText("Krupier: " + dealer.getHand() + " (" + dealer.getScore() + ")");
         } else {
             dealerLabel.setText("Krupier: [" + dealer.getHand().get(0) + ", ???]");
+        }
+    }
+
+    @FXML
+    private void onPlaceBet() {
+        try {
+            int bet = Integer.parseInt(betField.getText());
+
+            if (bet <= 0) {
+                resultLabel.setText("Zakład musi być większy niż 0!");
+                return;
+            }
+
+            if (bet > playerBalance) {
+                resultLabel.setText("Nie masz wystarczająco środków!");
+                return;
+            }
+
+            currentBet = bet;
+            playerBalance -= bet;
+            updateBalance();
+            resultLabel.setText("Zakład przyjęty. Kliknij New Game!");
+            betButton.setDisable(true);
+            betField.setDisable(true);
+
+        } catch (NumberFormatException e) {
+            resultLabel.setText("Nieprawidłowy zakład.");
         }
     }
 
