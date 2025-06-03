@@ -1,6 +1,8 @@
 package com.kasyno.gry;
 
 import java.util.*;
+
+import com.kasyno.database.UserDAO;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -36,8 +38,10 @@ public class Ruletka extends Application {
     private double currentAngle = 0;
     private int countdown = 15;
     private Timeline countdownTimer;
-
-    com.kasyno.player.Player player = new com.kasyno.player.Player();
+    private com.kasyno.player.Player player;
+    public Ruletka(com.kasyno.player.Player player) {
+        this.player = player;
+    }
 
     private String betColor = null;
     private List<String> betNumbers = new ArrayList<>();
@@ -57,7 +61,6 @@ public class Ruletka extends Application {
         }
 
         double totalBet = betAmountColor + (betAmountNumber * betNumbers.size());
-
 
         betButton.setDisable(true);
         betAmountFieldColor.setDisable(true);
@@ -234,7 +237,6 @@ public class Ruletka extends Application {
             int idx = i;
             colorBtn.setOnAction(e -> {
                 if (betColor != null && betColor.equals(colors[idx])) {
-                    // Odkliknięcie wybranego koloru — zwracamy stawkę i resetujemy
                     betColor = null;
                     player.setBalance(player.getBalance() + betAmountColor);
                     bilans.setText("Bilans: " + String.format("%.2f", player.getBalance()));
@@ -254,7 +256,6 @@ public class Ruletka extends Application {
                         }
                     });
                 } else {
-                    // Jeśli zmieniamy kolor (nowy wybór), zwracamy poprzednią stawkę tylko jeśli różni się od nowej
                     try {
                         double newBetAmount = Double.parseDouble(betAmountFieldColor.getText());
                         if (newBetAmount <= 0) {
@@ -262,7 +263,6 @@ public class Ruletka extends Application {
                             return;
                         }
 
-                        // Jeśli jest postawiony inny kolor lub inna kwota niż poprzednio, zwróć poprzednią stawkę
                         if (betColor != null) {
                             player.setBalance(player.getBalance() + betAmountColor);
                         }
@@ -390,12 +390,11 @@ public class Ruletka extends Application {
         countdownTimer.setCycleCount(Timeline.INDEFINITE);
         countdownTimer.play();
 
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1472, 832);
         stage.setTitle("Ruletka - Kasyno");
         stage.setScene(scene);
         stage.show();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
