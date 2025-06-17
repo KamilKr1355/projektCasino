@@ -82,7 +82,7 @@ public class Ruletka extends Application {
         double angleToRotate = fullSpin + relativeAngle;
         currentAngle += angleToRotate;
 
-        RotateTransition rt = new RotateTransition(Duration.seconds(4), wheel);
+        RotateTransition rt = new RotateTransition(Duration.seconds(10), wheel);
         rt.setInterpolator(Interpolator.EASE_OUT);
         rt.setByAngle(angleToRotate);
         rt.setCycleCount(1);

@@ -3,11 +3,9 @@ package com.kasyno.gry;
 import com.kasyno.menu.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import com.kasyno.player.Player;
 
 public class BlackJackController {
 
@@ -41,23 +39,41 @@ public class BlackJackController {
     @FXML
     private Button betButton;
 
+    @FXML
+    private Label winAmountLabel;
+
+    @FXML
+    private Button playButton;
+
+
     private Deck deck;
-    private Player player;
-    private Player dealer;
-    private int playerBalance = 1000;
+    private BlackJackPlayer player;
+    private BlackJackPlayer dealer;
+    private double playerBalance = 1000;
     private int currentBet = 0;
+    private Player loggedInPlayer;
 
 
+    public void setPlayer(Player player) {
+        this.loggedInPlayer = player;
+        this.playerBalance = player.getBalance();
+    }
 
     @FXML
     private void initialize() {
         hitButton.setDisable(true);
         standButton.setDisable(true);
         resultLabel.setText("Kliknij 'Nowa gra' aby rozpocząć.");
-//        startNewGame();
         betButton.setDisable(false);
-        updateBalance();
+    }
 
+
+    // nowa metoda wywoływana po setPlayer()
+    public void initGame() {
+        this.player = new BlackJackPlayer(loggedInPlayer);
+        this.dealer = new BlackJackPlayer("Dealer");
+        this.deck = new Deck();
+        updateBalance();
     }
 
 
@@ -66,12 +82,9 @@ public class BlackJackController {
     private void onHit() {
         player.addCard(deck.drawCard());
         updateUI(false);
-
         if (player.getScore() > 21) {
-            dealerPlay(); // krupier dobiera
-            updateUI(true); // pokaz wszystko
-            resultLabel.setText("Przegrałeś – bust!");
             disableButtons();
+            resultLabel.setText(checkWinner());
         }
     }
 
@@ -95,7 +108,7 @@ public class BlackJackController {
     private void onBack() {
         Stage currentStage = (Stage) backButton.getScene().getWindow();
         currentStage.close();
-
+        Image logo = new Image("Logo_Kasyna.jpg");
         Stage menuStage = new Stage();
         try {
             new MainMenu().start(menuStage);
@@ -106,17 +119,31 @@ public class BlackJackController {
 
     @FXML
     private void startNewGame() {
+        currentBet = 0;
+        playButton.setDisable(false);
+        betButton.setDisable(false);
+
+        player.removeCards();
+        dealer.removeCards();
+        updateUI(false); // false = nie pokazuj wszystkich kart krupiera
+
+
+    }
+//    Rozdawanie kart
+    @FXML
+    private void onPlay() {
+        if (currentBet <= 0) {
+            resultLabel.setText("Najpierw postaw zakład!");
+            return;
+        }
+        playButton.setDisable(true);
+        resultLabel.setText("");
         betButton.setDisable(false);
         betField.setDisable(false);
-        betField.clear();
-        currentBet = 0;
-
-        resultLabel.setText("");
         hitButton.setDisable(false);
         standButton.setDisable(false);
-        deck = new Deck(); // tworzy 6 talii
-        player = new Player();
-        dealer = new Player();
+        betButton.setDisable(true);
+
 
         // Rozdaj po 2 karty
         player.addCard(deck.drawCard());
@@ -129,6 +156,8 @@ public class BlackJackController {
 
     private void updateBalance() {
         balanceLabel.setText("Saldo: " + playerBalance);
+        player.setBalance(playerBalance);
+        loggedInPlayer.setBalance(playerBalance);
     }
 
 
@@ -144,12 +173,20 @@ public class BlackJackController {
         int playerScore = player.getScore();
         int dealerScore = dealer.getScore();
 
+        newGameButton.setDisable(false);
+        playButton.setDisable(true);
+        betButton.setDisable(true);
+        updateUI(true);
+        updateBalance();
+
         if (playerScore > 21) {
+            updateBalance();
             return "Bust! Przegrałeś zakład " + currentBet + "!";
         }
         if (dealerScore > 21 || playerScore > dealerScore) {
             int winAmount = currentBet * 2;
             playerBalance += winAmount;
+            showWinAmount("+ " + winAmount); //
             updateBalance();
             return "Wygrałeś " + winAmount + "!";
         }
@@ -163,13 +200,20 @@ public class BlackJackController {
     }
 
 
+
     private void updateUI(boolean showDealerAll) {
         playerLabel.setText("Gracz: " + player.getHand() + " (" + player.getScore() + ")");
-        if (showDealerAll) {
-            dealerLabel.setText("Krupier: " + dealer.getHand() + " (" + dealer.getScore() + ")");
-        } else {
-            dealerLabel.setText("Krupier: [" + dealer.getHand().get(0) + ", ???]");
+        if(dealer.getHand().isEmpty()) {
+            dealerLabel.setText("Krupier: [???]");
         }
+        else{
+            if (showDealerAll) {
+                dealerLabel.setText("Krupier: " + dealer.getHand() + " (" + dealer.getScore() + ")");
+            } else {
+                dealerLabel.setText("Krupier: [" + dealer.getHand().get(0) + ", ???]");
+            }
+        }
+
     }
 
     @FXML
@@ -190,13 +234,30 @@ public class BlackJackController {
             currentBet = bet;
             playerBalance -= bet;
             updateBalance();
-            resultLabel.setText("Zakład przyjęty. Kliknij New Game!");
+            resultLabel.setText("Zakład przyjęty. Kliknij Rozdaj karty!");
             betButton.setDisable(true);
             betField.setDisable(true);
+            newGameButton.setDisable(true);
+
+
 
         } catch (NumberFormatException e) {
             resultLabel.setText("Nieprawidłowy zakład.");
         }
     }
+
+    private void showWinAmount(String amount) {
+        winAmountLabel.setText(amount);
+        winAmountLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+
+        // Zniknięcie po 2 sekundach
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ignored) {}
+            javafx.application.Platform.runLater(() -> winAmountLabel.setText(""));
+        }).start();
+    }
+
 
 }

@@ -1,40 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="644.0" prefWidth="908.0" style="-fx-background-image: url(&quot;file:/C:/Users/filip/IdeaProjects/projektCasino/src/main/resources/BlackJack.png&quot;); -fx-background-size: cover;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kasyno.gry.BlackJackController">
-   <children>
-      <VBox alignment="CENTER" layoutX="155.0" layoutY="121.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="630.0" spacing="10" style="-fx-padding: 20; -fx-font-size: 16px; -fx-background-image: url(&quot;file:/C:/Users/filip/IdeaProjects/projektCasino/src/main/resources/BlackJackTlo.jpg&quot;); -fx-background-size: cover;">
-         <Label fx:id="balanceLabel" text="Stan konta:" textFill="WHITE" />
-         <HBox alignment="CENTER">
+<StackPane prefHeight="1024.0" prefWidth="1536.0"
+           style="-fx-background-image: url('/BlackJack2.png'); -fx-background-size: cover;"
+           xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.kasyno.gry.BlackJackController">
+
+    <VBox alignment="CENTER" spacing="10"
+          maxWidth="900" maxHeight="636"
+          style="-fx-background-image: url('/BlackJackTlo.jpg'); -fx-background-size: cover; -fx-padding: 20; -fx-font-size: 16px; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: gold; -fx-border-width: 1;">
+
+        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="420.0">
             <children>
-               <Label text="Zakład:  " textFill="WHITE" />
-               <TextField fx:id="betField" />
+                <Label fx:id="balanceLabel" alignment="CENTER" text="Stan konta:" textFill="WHITE" />
+                <Label fx:id="winAmountLabel" alignment="CENTER" textFill="#21bc40" />
             </children>
-         </HBox>
-         <Button fx:id="betButton" mnemonicParsing="false" onAction="#onPlaceBet" text="Postaw zakład" />
-         <VBox alignment="CENTER_LEFT">
+        </HBox>
+
+        <HBox alignment="CENTER">
             <children>
-            
-                                     <Label fx:id="playerLabel" text="Twoje karty: " textFill="WHITE" />
+                <Label text="Zakład:  " textFill="WHITE" />
+                <TextField fx:id="betField" />
+            </children>
+        </HBox>
+
+        <Button fx:id="betButton" mnemonicParsing="false" onAction="#onPlaceBet" text="Postaw zakład" />
+        <Button fx:id="playButton" mnemonicParsing="false" onAction="#onPlay" text="Rozdaj Karty" />
+
+        <VBox alignment="CENTER_LEFT">
+            <children>
+                <Label fx:id="playerLabel" text="Twoje karty: " textFill="WHITE" />
                 <Label fx:id="dealerLabel" text="Karty krupiera: " textFill="WHITE" />
             </children>
-         </VBox>
-      
-                <HBox alignment="CENTER" spacing="10">
-              <Button fx:id="hitButton" onAction="#onHit" text="Dobierz kartę" />
-              <Button fx:id="standButton" onAction="#onStand" prefHeight="35.0" prefWidth="90.0" text="Pas" />
-          </HBox>
-      
-                <Label fx:id="resultLabel" text="" textFill="WHITE" />
-      
-                <Button fx:id="backButton" onAction="#onBack" text="Powrót do menu" />
-         <Button fx:id="newGameButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" layoutX="100.0" mnemonicParsing="false" onAction="#startNewGame" text="Nowa gra" />
-      </VBox>
-   </children>
-</AnchorPane>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <children>
+                <Button fx:id="hitButton" onAction="#onHit" text="Dobierz kartę" />
+                <Button fx:id="standButton" onAction="#onStand" prefHeight="35.0" prefWidth="90.0" text="Pas" />
+            </children>
+        </HBox>
+
+        <Label fx:id="resultLabel" text="" textFill="WHITE" />
+
+        <Button fx:id="backButton" onAction="#onBack" text="Powrót do menu" />
+        <Button fx:id="newGameButton" alignment="BOTTOM_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#startNewGame" text="Nowa gra" />
+    </VBox>
+</StackPane>
