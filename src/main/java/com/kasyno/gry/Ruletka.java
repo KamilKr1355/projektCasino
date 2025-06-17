@@ -699,7 +699,7 @@ public class Ruletka extends Application {
                 resultText.setText("Stawka musi być większa niż 0!");
                 return;
             }
-
+//
             if (betNumbers.contains(num)) {
                 // Anuluj zakład
                 player.setBalance(player.getBalance() + betAmounts.getOrDefault("number", 0.0));
