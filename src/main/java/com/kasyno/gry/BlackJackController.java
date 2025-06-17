@@ -1,5 +1,6 @@
 package com.kasyno.gry;
 
+import com.kasyno.database.UserDAO;
 import com.kasyno.menu.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -181,9 +182,13 @@ public class BlackJackController {
 
         if (playerScore > 21) {
             updateBalance();
+            UserDAO.saveBet(player.getId(), "BlackJack", "Normal", String.valueOf(playerScore),
+                    currentBet, "Lost");
             return "Bust! Przegrałeś zakład " + currentBet + "!";
         }
         if (dealerScore > 21 || playerScore > dealerScore) {
+            UserDAO.saveBet(player.getId(), "BlackJack", "Normal", String.valueOf(playerScore),
+                    currentBet, "Win");
             int winAmount = currentBet * 2;
             playerBalance += winAmount;
             showWinAmount("+ " + winAmount); //
@@ -191,11 +196,14 @@ public class BlackJackController {
             return "Wygrałeś " + winAmount + "!";
         }
         if (dealerScore == playerScore) {
+            UserDAO.saveBet(player.getId(), "BlackJack", "Normal", String.valueOf(playerScore),
+                    currentBet, "Draw");
             playerBalance += currentBet; // zwrot stawki
             updateBalance();
             return "Remis – zakład zwrócony.";
         }
-
+        UserDAO.saveBet(player.getId(), "BlackJack", "Normal", String.valueOf(playerScore),
+                playerScore, "Lost");
         return "Przegrałeś zakład " + currentBet + "!";
     }
 
