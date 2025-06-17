@@ -67,7 +67,6 @@ public class Ruletka extends Application {
             resultText.setText("Wybierz coś do obstawienia!");
             return;
         }
-
         double totalBet = (betColor != null ? betAmounts.getOrDefault("color", 0.0) : 0.0) +
                 betNumbers.stream().mapToDouble(n -> betAmounts.getOrDefault("number", 0.0)).sum() +
                 betColumns.stream().mapToDouble(c -> betAmounts.getOrDefault("column", 0.0)).sum() +
@@ -161,19 +160,38 @@ public class Ruletka extends Application {
 
             // Wygrana dla kolumn
             if (column > 0 && betColumns.contains(String.valueOf(column))) {
-                winnings += betAmounts.getOrDefault("column", 0.0) * 2;
+                winnings += betAmounts.getOrDefault("column", 0.0) * 3;
             }
 
             // Wygrana dla tuzinów
             if (dozen > 0 && betDozens.contains(String.valueOf(dozen))) {
-                winnings += betAmounts.getOrDefault("dozen", 0.0) * 2;
+                winnings += betAmounts.getOrDefault("dozen", 0.0) * 3;
             }
 
             // Wygrana dla połówek
             if (half > 0 && betHalves.contains(String.valueOf(half))) {
-                winnings += betAmounts.getOrDefault("half", 0.0) * 1;
+                winnings += betAmounts.getOrDefault("half", 0.0) * 2;
             }
-
+            if (betColor != null) {
+                UserDAO.saveBet(player.getId(), "Ruletka", "Kolor", betColor,
+                        betAmounts.getOrDefault("color", 0.0), winnings>0? "Win" : "Lose");
+            }
+            for (String num : betNumbers) {
+                UserDAO.saveBet(player.getId(), "Ruletka", "Numer", num,
+                        betAmounts.getOrDefault("number", 0.0), winnings>0? "Win" : "Lose");
+            }
+            for (String col : betColumns) {
+                UserDAO.saveBet(player.getId(), "Ruletka", "Kolumna", col,
+                        betAmounts.getOrDefault("column", 0.0), winnings>0? "Win" : "Lose");
+            }
+            for (String doz : betDozens) {
+                UserDAO.saveBet(player.getId(), "Ruletka", "Tuzin", doz,
+                        betAmounts.getOrDefault("dozen", 0.0), winnings>0? "Win" : "Lose");
+            }
+            for (String halff : betHalves) {
+                UserDAO.saveBet(player.getId(), "Ruletka", "Połowa", halff,
+                        betAmounts.getOrDefault("half", 0.0), winnings>0? "Win" : "Lose");
+            }
             player.setBalance(player.getBalance() + winnings);
             resultText.setText(resultText.getText() + (winnings > 0 ? " - WYGRANA! +" + winnings : " - PRZEGRANA :("));
             bilans.setText("Bilans: " + String.format("%.2f", player.getBalance()));
@@ -216,7 +234,7 @@ public class Ruletka extends Application {
     }
 
     private void resetButtonsStyle() {
-        // reset przycisków numerów
+
         numberButtons.forEach((num, btn) -> {
             String color = returnColor(num);
             switch (color) {
@@ -232,7 +250,7 @@ public class Ruletka extends Application {
             }
         });
 
-        // reset przycisków kolorów
+
         colorButtons.forEach((col, btn) -> {
             switch (col) {
                 case "r":
@@ -247,17 +265,17 @@ public class Ruletka extends Application {
             }
         });
 
-        // reset przycisków kolumn
+
         columnButtons.forEach((col, btn) -> {
             btn.setStyle("-fx-background-color: #d4af37; -fx-text-fill: white;");
         });
 
-        // reset przycisków tuzinów
+
         dozenButtons.forEach((doz, btn) -> {
             btn.setStyle("-fx-background-color: #d4af37; -fx-text-fill: white;");
         });
 
-        // reset przycisków połówek
+
         halfButtons.forEach((half, btn) -> {
             btn.setStyle("-fx-background-color: #d4af37; -fx-text-fill: white;");
         });
@@ -302,14 +320,14 @@ public class Ruletka extends Application {
                         "-fx-font-size: 16px;"
         );
 
-        // Jedno pole do wprowadzania stawek
+
         betAmountField = new TextField();
         betAmountField.setPromptText("Wprowadź stawkę");
         betAmountField.setLayoutX(803);
         betAmountField.setLayoutY(120);
         betAmountField.setPrefWidth(150);
 
-        // Przyciski kolorów
+
         String[] colors = {"r", "b", "g"};
         String[] colorNames = {"Czerwony", "Czarny", "Zielony"};
         for (int i = 0; i < colors.length; i++) {
@@ -339,7 +357,7 @@ public class Ruletka extends Application {
                     }
 
                     if (betColor != null && betColor.equals(colors[idx])) {
-                        // Anuluj zakład
+
                         player.setBalance(player.getBalance() + betAmounts.getOrDefault("color", 0.0));
                         bilans.setText("Bilans: " + String.format("%.2f", player.getBalance()));
                         betColor = null;
@@ -347,13 +365,11 @@ public class Ruletka extends Application {
                         colorBtn.setStyle("-fx-background-color: " + (colors[idx].equals("r") ? "red" : colors[idx].equals("b") ? "black" : "green") + "; -fx-text-fill: white;");
                     } else {
                         if (player.getBalance() >= betAmount) {
-                            // Anuluj poprzedni zakład na kolor jeśli istnieje
                             if (betColor != null) {
                                 player.setBalance(player.getBalance() + betAmounts.getOrDefault("color", 0.0));
                                 colorButtons.get(betColor).setStyle("-fx-background-color: " + (betColor.equals("r") ? "red" : betColor.equals("b") ? "black" : "green") + "; -fx-text-fill: white;");
                             }
 
-                            // Postaw nowy zakład
                             player.setBalance(player.getBalance() - betAmount);
                             bilans.setText("Bilans: " + String.format("%.2f", player.getBalance()));
                             betColor = colors[idx];
@@ -373,13 +389,11 @@ public class Ruletka extends Application {
             root.getChildren().add(colorBtn);
         }
 
-        // Przyciski numerów w układzie ruletki
         int startX = 803;
         int startY = 210;
         int btnWidth = 40;
         int btnHeight = 30;
 
-        // Kolumna 0 (specjalna)
         Button zeroBtn = new Button("0");
         zeroBtn.setLayoutX(startX);
         zeroBtn.setLayoutY(startY);
@@ -389,7 +403,6 @@ public class Ruletka extends Application {
         numberButtons.put("0", zeroBtn);
         root.getChildren().add(zeroBtn);
 
-        // Rzędzy 1-3 (12x3 przycisków)
         String[][] rowNumbers = {
                 {
                     "3","2","1"
@@ -453,7 +466,6 @@ public class Ruletka extends Application {
             }
         }
 
-        // Przyciski kolumn (1-3)
         for (int i = 1; i <= 3; i++) {
             Button rowBtn = new Button("2:1");
             rowBtn.setLayoutX(startX + 40*15-15);
@@ -497,8 +509,6 @@ public class Ruletka extends Application {
             columnButtons.put(String.valueOf(i), rowBtn);
             root.getChildren().add(rowBtn);
         }
-
-        // Przyciski tuzinów (1-3)
         for (int i = 1; i <= 3; i++) {
             Button dozenBtn = new Button(i + ". tuzin");
             if (i==1) {dozenBtn = new Button("1-12");}
@@ -548,7 +558,6 @@ public class Ruletka extends Application {
             root.getChildren().add(dozenBtn);
         }
 
-        // Przyciski połówek (1-2)
         Button firstHalfBtn = new Button("1-18");
         firstHalfBtn.setLayoutX(startX);
         firstHalfBtn.setLayoutY(startY + 6 * (btnHeight ));

@@ -11,13 +11,10 @@ import com.kasyno.gry.Ruletka;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class MainMenu extends Application {
@@ -27,6 +24,27 @@ public class MainMenu extends Application {
         player = p;
     }
 
+    private void showBetHistory() {
+        Stage historyStage = new Stage();
+        VBox layout = new VBox(10);
+        layout.setStyle("-fx-padding: 20; -fx-background-color: #f5f5f5;");
+
+        Label title = new Label("Ostatnie 100 zakładów");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
+        ListView<String> listView = new ListView<>();
+        listView.getItems().addAll(UserDAO.getLastBets(player.getId(), 100));
+
+        Button closeButton = new Button("Zamknij");
+        closeButton.setOnAction(e -> historyStage.close());
+
+        layout.getChildren().addAll(title, listView, closeButton);
+
+        Scene scene = new Scene(layout, 800, 600);
+        historyStage.setScene(scene);
+        historyStage.setTitle("Historia zakładów");
+        historyStage.show();
+    }
     @Override
     public void start(Stage primaryStage) {
 
@@ -45,8 +63,15 @@ public class MainMenu extends Application {
 
         Button ruletkaButton = new Button("Ruletka");
 
-        Button slotsMachineButton = new Button("Slots Machine");
-  
+        Button slotsMachineButton = new Button("Historia zakładów");
+
+        Button historyButton = new Button("Historia zakładów");
+        historyButton.setPrefWidth(250);
+        historyButton.setPrefHeight(60);
+        historyButton.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
+        historyButton.setLayoutX(213);
+        historyButton.setLayoutY(490);
+        historyButton.setOnAction(e -> showBetHistory());
 
         // Funkcja dla przycisku Blackjack
         blackjackButton.setOnAction(e -> {
@@ -68,7 +93,7 @@ public class MainMenu extends Application {
                 ex.printStackTrace();
             }
         });
-
+        slotsMachineButton.setOnAction(e -> showBetHistory());
         // Układ VBox do przycisków
         //VBox vbox_bj = new VBox(blackjackButton);
 
