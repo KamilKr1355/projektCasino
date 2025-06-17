@@ -16,7 +16,7 @@
 log/
 *.log
 *.tmp
-
+kasyno.db
 # JavaFX
 *.jar
 *.exe
