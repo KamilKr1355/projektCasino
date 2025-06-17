@@ -11,7 +11,7 @@
 .idea/
 .vscode/
 .DS_Store
-
+kasyno.db
 # Maven
 log/
 *.log
