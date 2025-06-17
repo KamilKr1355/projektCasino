@@ -1,16 +1,30 @@
 package com.kasyno.gry;
 
+import com.kasyno.player.Player;
+
 import java.util.*;
 
-public class Player {
+public class BlackJackPlayer extends Player {
     private List<Card> hand;
 
-    public Player() {
+    public BlackJackPlayer(String id) {
+        super(id);
         hand = new ArrayList<>();
+    }
+
+
+    public BlackJackPlayer(Player basePlayer) {
+        super(basePlayer.getId());
+        this.setBalance(basePlayer.getBalance());
+        this.hand = new ArrayList<>();
     }
 
     public void addCard(Card card) {
         hand.add(card);
+    }
+
+    public void removeCards() {
+        hand.clear();
     }
 
     public int getScore() {

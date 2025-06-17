@@ -51,7 +51,7 @@ public class MainMenu extends Application {
         // Funkcja dla przycisku Blackjack
         blackjackButton.setOnAction(e -> {
             try {
-                BlackJackApp blackjackApp = new BlackJackApp();
+                BlackJackApp blackjackApp = new BlackJackApp(player);
                 blackjackApp.start(new Stage()); // uruchom w nowym oknie
                 primaryStage.hide(); //ukryj menu
             } catch (Exception ex) {
