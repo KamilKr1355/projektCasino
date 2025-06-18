@@ -73,6 +73,15 @@ public class MainMenu extends Application {
         historyButton.setLayoutY(490);
         historyButton.setOnAction(e -> showBetHistory());
 
+        //przycisk z doladowaniem salda
+        Button topUpButton = new Button("Doładuj konto +1000");
+        topUpButton.setPrefWidth(250);
+        topUpButton.setPrefHeight(60);
+        topUpButton.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
+        topUpButton.setLayoutX(213);
+        topUpButton.setLayoutY(490);
+
+
         // Funkcja dla przycisku Blackjack
         blackjackButton.setOnAction(e -> {
             try {
@@ -84,6 +93,8 @@ public class MainMenu extends Application {
             }
 
         });
+
+        //obsluga przycisku rulette
         ruletkaButton.setOnAction(e -> { 
             try{
             Ruletka ruletka = new Ruletka(player);
@@ -93,6 +104,13 @@ public class MainMenu extends Application {
                 ex.printStackTrace();
             }
         });
+
+
+
+
+
+
+
         slotsMachineButton.setOnAction(e -> showBetHistory());
         // Układ VBox do przycisków
         //VBox vbox_bj = new VBox(blackjackButton);
@@ -130,7 +148,22 @@ public class MainMenu extends Application {
         slotsMachineButton.setLayoutX(213);
         slotsMachineButton.setLayoutY(450);
 
-        root.getChildren().addAll(blackjackButton,ruletkaButton,slotsMachineButton);
+        Label balanceLabel = new Label("Saldo: " + player.getBalance());
+        balanceLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
+        balanceLabel.setLayoutX(1100);  // prawa strona
+        balanceLabel.setLayoutY(20);    // górna część
+
+        //obsluga przycisku z doladowaniem salda
+        topUpButton.setOnAction(e -> {
+            if (player != null) {
+                player.setBalance(player.getBalance() + 1000);
+                balanceLabel.setText("Saldo: " + player.getBalance());
+                System.out.println("Saldo po doładowaniu: " + player.getBalance());
+            }
+        });
+
+
+        root.getChildren().addAll(blackjackButton,ruletkaButton,topUpButton,slotsMachineButton,balanceLabel);
 
 
         Image backgroundImage = new Image("background.jpg");
@@ -160,6 +193,9 @@ public class MainMenu extends Application {
 
 
         slotsMachineButton.setBackground(new Background(buttonBack));
+
+        topUpButton.setBackground(new Background(buttonBack));
+
 
         root.setBackground(new Background(background));
 

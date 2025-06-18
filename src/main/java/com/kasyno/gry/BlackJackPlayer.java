@@ -50,11 +50,5 @@ public class BlackJackPlayer extends Player {
         return hand;
     }
 
-    public void showHand(boolean showAll) {
-        if (!showAll) {
-            System.out.println("[" + hand.get(0) + ", Hidden]");
-        } else {
-            System.out.println(hand);
-        }
-    }
+
 }
