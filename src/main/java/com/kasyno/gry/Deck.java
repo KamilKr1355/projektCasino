@@ -8,6 +8,7 @@ public class Deck {
     private static final String[] RANKS = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
     private static final int[] VALUES =   {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};
 
+    //konstruktor tworzacy 6 talii do blackjacka
     public Deck() {
         cards = new ArrayList<>();
         for (int d = 0; d < 6; d++) { // 6 talii
